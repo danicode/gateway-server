@@ -13,6 +13,9 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @Configuration
 public class SpringSecurityConfig {
 
+    @Autowired
+    private JwtAuthenticationFilter authenticationFilter;
+
     @Bean
     public SecurityWebFilterChain configure(ServerHttpSecurity http) {
         return http
@@ -28,6 +31,7 @@ public class SpringSecurityConfig {
                                 .pathMatchers("/api/productos/**", "/api/items/**", "/api/usuarios/usuarios/**").hasRole("ADMIN")
                                 .anyExchange().authenticated()
                 )
+                .addFilterAt(authenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .csrf(csrf -> csrf.disable())
                 .build();
     }
